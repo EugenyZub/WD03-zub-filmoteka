@@ -6,9 +6,20 @@ if( mysqli_connect_error() ) {
 	die("Ошибка подключение к базе данных...");
 } 
 
-$resultSuccess = "";
-$resultError = "";
 $errors = array();
+
+//Удаление фильма 
+if ( @$_GET['action'] == 'delete') {
+	$query = "DELETE FROM films WHERE id = ' " . mysqli_real_escape_string($link, $_GET['id']) . " ' LIMIT 1";
+
+	mysqli_query($link, $query);
+
+	if ( mysqli_affected_rows($link) > 0 ) {
+			$resultInfo = "<p>Фильм был удалён!</p>";
+		}
+}
+
+
 
 if(array_key_exists('add-film', $_POST) ) {
 		if ( $_POST['title'] == '') {
@@ -29,9 +40,9 @@ if(array_key_exists('add-film', $_POST) ) {
 
 			if ( mysqli_query($link, $query) ) {
 					$resultSuccess = "<p>Фильм был успешно добавлен!</p>";
-			} else {
-					$resultError = "<p>Фильм не удалось добавить</p>";
-			 }
+			} //else {
+				//	$resultError = "<p>Фильм не удалось добавить</p>";
+			 //}
 		}
  }
 
@@ -72,21 +83,27 @@ if ( $result = mysqli_query($link, $query) ) {
 		
 		<div class="container user-content pt-35">
 
-		<?php if ( $resultSuccess !='' ) { ?>
+		<?php if ( @$resultSuccess !='' ) { ?>
 				<div class="info-success"><?=$resultSuccess?></div>
 		<?php } ?>
 
-		<?php if ( $resultError != '' ) { ?>
+		<?php if ( @$resultInfo !='' ) { ?>
+				<div class="info-notification"><?=$resultInfo?></div>
+		<?php } ?>
+
+		<?php if ( @$resultError != '' ) { ?>
 				<div class="error"><?=$resultError?></div>
 		<?php } ?>
 
 		<h1 class="title-1"> Фильмотека</h1>
 
 		<?php 
-			foreach ($films as $key => $film) {
-		?>
+			foreach ($films as $key => $film) { ?>
 			<div class="card mb-20">
-				<h4 class="title-4"> <?=$film['title']?> </h4>
+				<div class="card__header">
+					<h4 class="title-4"><?=$film['title']?></h4>
+					<a href="?action=delete&id=<?=$film['id']?>" class="button button--delete">Удалить</a>
+				</div>
 				<div class="badge"> <?=$film['genre']?> </div>
 				<div class="badge"> <?=$film['year']?> </div>
 			</div>
