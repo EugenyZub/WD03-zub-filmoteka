@@ -21,8 +21,8 @@ function film_new($link, $title, $genre, $year, $description, $photo){
 			'". mysqli_real_escape_string($link, $title) ."', 
 			'". mysqli_real_escape_string($link, $genre) ."', 
 			'". mysqli_real_escape_string($link, $year) ."',
-			". mysqli_real_escape_string($link, $description) ."',
-			". mysqli_real_escape_string($link, $photo) ."'
+			'". mysqli_real_escape_string($link, $description) ."',
+			'". mysqli_real_escape_string($link, $photo) ."'
 			)";
 		if ( mysqli_query($link, $query) ) {
 			$result = true;
